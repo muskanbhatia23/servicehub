@@ -12,12 +12,34 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
+
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+
+            // Basic Information
+            $table->string('name')->nullable();
+            $table->string('mobile')->unique();
+
+            // Optional Email
+            $table->string('email')->nullable();
+
+            // Admin Login Support
+            $table->string('password')->nullable();
+
+            // Verification
+            $table->timestamp('mobile_verified_at')->nullable();
+
+            // User Preferences
+            $table->string('language', 5)->default('en');
+
+            // Account Status
+            $table->boolean('status')->default(true);
+            $table->boolean('is_verified')->default(false);
+
+            // Activity Tracking
+            $table->timestamp('last_login_at')->nullable();
+
             $table->rememberToken();
+
             $table->timestamps();
         });
 
@@ -42,8 +64,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };
